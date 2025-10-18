@@ -1,0 +1,54 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+build/
+subprojects/**/
+.vscode/
+.idea/
+*.gz
+*.tar
+.vs/
+.cache/
+
+# Wrap files that meson is scared of for some reason
+subprojects/libpng.wrap
+subprojects/zlib.wrap
+
+# Docs stuff
+docs/xml/
+docs/_build/
+
+# Nix
+.direnv/
+result/
+
