@@ -21,6 +21,7 @@ deps = [
   dependency('sdl3'),
   dependency('sdl3_image'),
   dependency('sdl3_ttf'),
+  dependency('imgui-docking'),
 ]
 
 # --------- Source Discovery ---------
