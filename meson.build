@@ -15,7 +15,12 @@ project(
 src_dir = 'src'
 examples_dir = 'examples'
 incs = include_directories('include')
-deps = []
+
+deps = [
+  dependency('sdl3'),
+  dependency('sdl3_image'),
+  dependency('sdl3_ttf'),
+]
 
 fs = import('fs')
 
