@@ -9,12 +9,10 @@ doc_conf.set('project_name', meson.project_name())
 
 src_dir_abs = meson.project_source_root() / 'src'
 inc_dir_abs = meson.project_source_root() / 'include'
-readme_abs = meson.project_source_root() / 'README.md'
 theme_dir_abs = meson.project_source_root() / 'docs' / 'styles'
 
 doc_conf.set('DOXYGEN_INPUT', src_dir_abs + ' ' + inc_dir_abs)
 doc_conf.set('DOXYGEN_OUTPUT_DIR', meson.project_build_root() / 'docs')
-doc_conf.set('USE_MDFILE_AS_MAINPAGE', readme_abs)
 doc_conf.set('HTML_EXTRA_STYLESHEET', theme_dir_abs / 'doxygen-awesome.css')
 doc_conf.set(
   'HTML_EXTRA_FILES',
