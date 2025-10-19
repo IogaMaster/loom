@@ -12,8 +12,9 @@ project(
   ],
 )
 
+fs = import('fs')
+
 src_dir = 'src'
-examples_dir = 'examples'
 incs = include_directories('include')
 
 deps = [
@@ -22,14 +23,13 @@ deps = [
   dependency('sdl3_ttf'),
 ]
 
-fs = import('fs')
+# --------- Source Discovery ---------
 
 # Meson says this is not a good idea, because you need to rerun `meson setup` on each new file
 # But you have to manually add the file each time, which means you need to run `meson setup` again anyway
 # So I cannot be asked to rewrite it each time and fd is fast enough, so here it is. Just as unintended! ;)
-srcs = run_command(['fd', '.', src_dir, '--extension', 'cpp', '--extension', 'c'], check: true).stdout().strip().split('\n')
-examples_srcs = run_command(
-  ['fd', '.', examples_dir, '--extension', 'cpp', '--extension', 'c'],
+srcs = run_command(
+  ['fd', '.', src_dir, '--extension', 'cpp', '--extension', 'c'],
   check: true,
 ).stdout().strip().split('\n')
 
@@ -40,14 +40,7 @@ foreach s : srcs
   endif
 endforeach
 
-clean_examples = []
-foreach s : examples_srcs
-  if s != ''
-    clean_examples += s.strip().replace('./', '')
-  endif
-endforeach
-
-# --------- Final Build ---------
+# --------- Library Build ---------
 
 loom_lib = library(
   'loom',
@@ -57,51 +50,14 @@ loom_lib = library(
   dependencies: deps,
 )
 
-foreach ex_src : clean_examples
-  ex_name = fs.stem(fs.name(ex_src))
-  message('Building example: ' + ex_name + ' from ' + ex_src)
-  executable(
-    ex_name,
-    ex_src,
-    include_directories: incs,
-    link_with: loom_lib,
-    dependencies: deps,
-    install: false,
-  )
-endforeach
+loom_dep = declare_dependency(
+  link_with: loom_lib,
+  include_directories: incs,
+  dependencies: deps,
+)
+meson.override_dependency('loom', loom_dep)
 
-# --------- Documentation Generation ---------
-doxygen = find_program('doxygen', required: false)
-if doxygen.found()
-  doc_conf = configuration_data()
-  doc_conf.set('project_name', meson.project_name())
+# --------- Subdirectories ---------
 
-  # Absolute paths
-  src_dir_abs = meson.project_source_root() / 'src'
-  inc_dir_abs = meson.project_source_root() / 'include'
-  readme_abs = meson.project_source_root() / 'README.md'
-  theme_dir_abs = meson.project_source_root() / 'docs' / 'styles'
-
-  doc_conf.set('DOXYGEN_INPUT', src_dir_abs + ' ' + inc_dir_abs)
-  doc_conf.set('DOXYGEN_OUTPUT_DIR', meson.project_build_root() / 'docs')
-  doc_conf.set('USE_MDFILE_AS_MAINPAGE', readme_abs)
-
-  # Pass absolute paths to theme files
-  doc_conf.set('HTML_EXTRA_STYLESHEET', theme_dir_abs / 'doxygen-awesome.css')
-  doc_conf.set(
-    'HTML_EXTRA_FILES',
-    theme_dir_abs / 'doxygen-awesome-darkmode-toggle.js'
-    + ' '
-    + theme_dir_abs / 'doxygen-awesome-tabs.js',
-  )
-
-  doxyfile = configure_file(input: 'Doxyfile.in', output: 'Doxyfile', configuration: doc_conf)
-
-  custom_target(
-    'docs',
-    input: doxyfile,
-    output: 'docs.done',
-    command: [doxygen, doxyfile],
-    build_by_default: false,
-  )
-endif
+subdir('examples')
+subdir('docs')

@@ -6,7 +6,7 @@ default: build
 
 # Run an example, defaults to testbed
 run target="testbed": build
-    ./build/{{target}}
+    ./build/examples/{{target}}
 
 # Generate api docs with doxygen
 docs: setup
