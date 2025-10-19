@@ -61,3 +61,4 @@ meson.override_dependency('loom', loom_dep)
 
 subdir('examples')
 subdir('docs')
+subdir('tests')
