@@ -50,5 +50,5 @@ docs/_build/
 
 # Nix
 .direnv/
-result/
+result
 

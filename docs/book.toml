@@ -1,0 +1,6 @@
+[book]
+authors = ["IogaMaster"]
+language = "en"
+multilingual = false
+src = "book"
+title = "loom"

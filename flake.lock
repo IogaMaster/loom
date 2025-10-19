@@ -1,6 +1,40 @@
 {
   "nodes": {
+    "mdbook": {
+      "inputs": {
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1744174589,
+        "narHash": "sha256-lOEE1MHi/shaMB2GQ/4mR/mXe+IjXZLU9YGGAYPVpvg=",
+        "owner": "pbar1",
+        "repo": "nix-mdbook",
+        "rev": "0c8e5ab1adc7203511ccbbffe3819d8bb694e450",
+        "type": "github"
+      },
+      "original": {
+        "owner": "pbar1",
+        "repo": "nix-mdbook",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
+      "locked": {
+        "lastModified": 1760524057,
+        "narHash": "sha256-EVAqOteLBFmd7pKkb0+FIUyzTF61VKi7YmvP1tw4nEw=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "544961dfcce86422ba200ed9a0b00dd4b1486ec5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
       "locked": {
         "lastModified": 1760524057,
         "narHash": "sha256-EVAqOteLBFmd7pKkb0+FIUyzTF61VKi7YmvP1tw4nEw=",
@@ -18,7 +52,8 @@
     },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "mdbook": "mdbook",
+        "nixpkgs": "nixpkgs_2"
       }
     }
   },

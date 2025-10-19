@@ -1,7 +1,8 @@
 {
   inputs.nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+  inputs.mdbook.url = "github:pbar1/nix-mdbook";
 
-  outputs = { nixpkgs, ... }:
+  outputs = { nixpkgs, mdbook, ... }:
     let
       inherit (nixpkgs) lib;
       forAllSystems = function:
@@ -42,6 +43,13 @@
             export CXX=clang++
           '';
 
+        };
+      });
+
+      packages = forAllSystems (pkgs: {
+        book = mdbook.lib.buildMdBookProject {
+          inherit (pkgs) system;
+          src = ./docs;
         };
       });
     };
