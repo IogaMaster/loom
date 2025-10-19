@@ -11,7 +11,7 @@ run target="testbed": build
 # Build the project
 build:
     meson setup build --reconfigure
-    ninja -C build
+    ninja -C build clang-tidy
 
 # Clean build artifacts
 clean:
