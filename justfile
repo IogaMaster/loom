@@ -8,13 +8,18 @@ default: build
 run target="testbed": build
     ./build/{{target}}
 
-docs: build
+# Generate api docs with doxygen
+docs: setup
     meson compile -C build docs
 
 # Build the project
-build:
-    meson setup build --reconfigure
+build: setup
     ninja -C build clang-tidy
+    meson compile -C build 
+
+# Quick recipe for other tasks, but you can use it, just configures the build
+setup: 
+    meson setup build --reconfigure
 
 # Clean build artifacts
 clean:
