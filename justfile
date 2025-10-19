@@ -8,6 +8,9 @@ default: build
 run target="testbed": build
     ./build/{{target}}
 
+docs: build
+    meson compile -C build docs
+
 # Build the project
 build:
     meson setup build --reconfigure

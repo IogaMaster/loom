@@ -21,6 +21,8 @@
             ninja
             pkg-config
             fd
+
+            doxygen
           ];
 
           buildInputs = with pkgs; [
