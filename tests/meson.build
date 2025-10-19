@@ -2,13 +2,6 @@ fs = import('fs')
 test_dir = meson.current_source_dir()
 incs = include_directories('../include')
 
-deps = [
-  dependency('sdl3'),
-  dependency('sdl3_image'),
-  dependency('sdl3_ttf'),
-  dependency('loom'),
-]
-
 # Discover tests
 test_srcs = run_command(
   ['fd', '.', test_dir, '--extension', 'cpp', '--extension', 'c'],

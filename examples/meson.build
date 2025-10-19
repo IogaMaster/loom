@@ -2,13 +2,6 @@ fs = import('fs')
 examples_dir = meson.current_source_dir()
 incs = include_directories('../include')
 
-deps = [
-  dependency('sdl3'),
-  dependency('sdl3_image'),
-  dependency('sdl3_ttf'),
-  dependency('loom'),
-]
-
 # Discover example sources
 examples_srcs = run_command(
   ['fd', '.', '--extension', 'cpp', '--extension', 'c'],
