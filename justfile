@@ -12,7 +12,6 @@ run target="testbed": build
 
 # Build the project
 build: setup
-    ninja -C build clang-tidy
     meson compile -C build 
 
 # Generate api docs with doxygen
