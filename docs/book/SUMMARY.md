@@ -3,3 +3,7 @@
 # User Guide
 
 - [Intro](./intro.md)
+
+# Modules
+
+- [ECS](./ecs.md)
