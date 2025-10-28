@@ -7,7 +7,17 @@
 
 namespace loom::utils {
 
-template <typename T> class SparseSet {
+class ISparseSet {
+public:
+  virtual ~ISparseSet() = default;
+  virtual auto remove(uint64_t idx) -> void = 0;
+};
+
+/**
+ * @brief Sparse data structure that maps indexes into a densely packed vector
+ * of data, for cache locality
+ */
+template <typename T> class SparseSet : public ISparseSet {
   static constexpr size_t tombstone = std::numeric_limits<size_t>::max();
 
   std::vector<uint64_t> m_sparse;
@@ -54,6 +64,11 @@ public:
     m_sparse[idx] = m_dense.size() - 1;
   };
 
+  /**
+   * @brief Remove data from the sparse set
+   *
+   * @param idx Sparse index to remove data of
+   */
   auto remove(uint64_t idx) -> void {
     uint64_t deletedIndex = getDenseIndex(idx);
 
@@ -70,6 +85,13 @@ public:
     m_dense.pop_back();
     m_reverse.pop_back();
   };
+
+  /**
+   * @brief Get data at index
+   *
+   * @param idx Index to get
+   * @return Optional pointer to data
+   */
   auto get(uint64_t idx) -> std::optional<T *> {
     uint64_t index = getDenseIndex(idx);
     if (index != tombstone) {
@@ -77,6 +99,13 @@ public:
     }
     return std::nullopt;
   }
+
+  /**
+   * @brief Get data at index
+   *
+   * @param idx Index to get
+   * @return Optional Reference to data
+   */
   auto get_ref(uint64_t idx) -> std::optional<std::reference_wrapper<T>> {
     uint64_t index = getDenseIndex(idx);
     if (index != tombstone) {
@@ -85,6 +114,12 @@ public:
     return std::nullopt;
   }
 
+  auto get_dense() const -> std::vector<T> & { return m_dense; }
+  auto size() -> size_t { return m_dense.size(); }
+
+  /**
+   * @brief Clear and deallocate the set
+   */
   auto clear() -> void {
     m_dense.clear();
     m_sparse.clear();
