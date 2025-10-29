@@ -114,7 +114,7 @@ public:
     return std::nullopt;
   }
 
-  auto get_dense() const -> std::vector<T> & { return m_dense; }
+  auto get_dense() -> std::vector<T> & { return m_dense; }
   auto size() -> size_t { return m_dense.size(); }
 
   /**
