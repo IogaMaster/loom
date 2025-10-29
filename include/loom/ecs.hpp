@@ -260,8 +260,9 @@ public:
       }
 
       for (auto entity : matchedEntities) {
-        func((
-            world->get_or_create_pool<Components>().get_ref(entity)->get())...);
+        func(entity, (world->get_or_create_pool<Components>()
+                          .get_ref(entity)
+                          ->get())...);
       }
     }
   };

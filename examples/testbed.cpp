@@ -1,4 +1,6 @@
+#include <iostream>
 #include <loom/loom.hpp>
+#include <ranges>
 
 struct Position {
   int x = 0;
@@ -12,15 +14,18 @@ struct Velocity {
 
 auto main() -> int {
   auto world = loom::ecs::World();
-  auto entity1 = world.create_entity();
 
-  world.add(entity1, Position{}, Velocity{});
+  for (int i : std::ranges::views::iota(0, 100000)) {
+    auto entity = world.create_entity();
+    world.add(entity, Position{}, Velocity{});
+  }
 
   auto movementSystem = [view = world.view<Position, Velocity>()]() -> void {
-    view.each([](Position &pos, Velocity &vel) -> void {
-      pos.x += vel.x;
-      pos.y += vel.y;
-    });
+    view.each(
+        [](loom::ecs::Entity entity, Position &pos, Velocity &vel) -> void {
+          pos.x += vel.x;
+          pos.y += vel.y;
+        });
   };
   movementSystem();
 }
