@@ -1,3 +1,4 @@
+#pragma once
 
 #include "loom/utils/sparse_set.hpp"
 #include <bitset>
