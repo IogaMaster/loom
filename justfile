@@ -11,7 +11,7 @@ run target="testbed": build
     ./build/examples/{{target}}
 
 # Build the project
-build: setup
+build: 
     meson compile -C build 
 
 # Generate api docs with doxygen
