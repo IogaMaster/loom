@@ -43,7 +43,7 @@ endforeach
 
 # --------- Library Build ---------
 
-loom_lib = library(
+loom_lib = shared_library(
   'loom',
   clean_srcs,
   include_directories: incs,
