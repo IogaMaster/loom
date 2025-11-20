@@ -22,6 +22,7 @@
             ninja
             pkg-config
             fd
+            luajit
 
             doxygen
           ];

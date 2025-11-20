@@ -22,6 +22,7 @@ deps = [
   dependency('sdl3_image'),
   dependency('sdl3_ttf'),
   dependency('imgui-docking'),
+  dependency('sol2', default_options: ['use_luajit=true']),
 ]
 
 # --------- Source Discovery ---------
