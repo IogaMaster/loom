@@ -18,10 +18,7 @@ src_dir = 'src'
 incs = include_directories('include')
 
 deps = [
-  dependency('sdl3'),
-  dependency('sdl3_image'),
-  dependency('sdl3_ttf'),
-  dependency('imgui-docking'),
+  # Core deps
   dependency('sol2', default_options: ['use_luajit=true']),
 ]
 

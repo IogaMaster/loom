@@ -27,23 +27,12 @@
             doxygen
           ];
 
-          buildInputs = with pkgs; [
-            sdl3
-            sdl3-image
-            sdl3-ttf
-
-            # Runtime deps for sdl3
-            libpng
-            freetype
-            dbus
-            wayland
-          ];
+          buildInputs = with pkgs; [ ];
 
           shellHook = ''
             export CC=clang
             export CXX=clang++
           '';
-
         };
       });
 
