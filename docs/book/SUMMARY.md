@@ -3,7 +3,7 @@
 # User Guide
 
 - [Intro](./intro.md)
+- [Getting Started](./getting_started.md)
 
 # Modules
 
-- [ECS](./ecs.md)

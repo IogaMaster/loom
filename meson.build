@@ -39,25 +39,48 @@ foreach s : srcs
   endif
 endforeach
 
-# --------- Library Build ---------
+# --------- Module Build ---------
 
-loom_lib = shared_library(
+module_names = []
+foreach src : clean_srcs
+  if not src.contains('src/modules')
+    continue
+  endif
+  module_name = src.split('/')[-2]
+  if not module_names.contains(module_name)
+    module_names += module_name
+  endif
+endforeach
+
+foreach module_name : module_names
+  module_srcs = []
+  foreach src : clean_srcs
+    if src.startswith(module_name)
+      module_srcs += src
+    endif
+  endforeach
+
+  # Create the shared library for this module
+  shared_library(
+    'loom_' + module_name,
+    module_srcs,
+    include_directories: include_directories('include'),
+    install: false,
+    dependencies: deps,
+  )
+endforeach
+
+# --------- Runtime ---------
+
+executable(
   'loom',
-  clean_srcs,
-  include_directories: incs,
-  install: false,
-  dependencies: deps,
-)
-
-loom_dep = declare_dependency(
-  link_with: loom_lib,
+  ['src/main.cpp'],
   include_directories: incs,
   dependencies: deps,
+  install: true,
 )
-meson.override_dependency('loom', loom_dep)
 
 # --------- Subdirectories ---------
 
-subdir('examples')
 subdir('docs')
 subdir('tests')

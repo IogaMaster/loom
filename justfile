@@ -1,14 +1,9 @@
-alias r:=run
 alias b:=build
 alias t:=test
 alias d:=docs
 alias c:=clean
 
 default: build
-
-# Run an example, defaults to testbed
-run target="testbed": build
-    ./build/examples/{{target}}
 
 # Build the project
 build: 
