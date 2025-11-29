@@ -32,6 +32,7 @@
           shellHook = ''
             export CC=clang
             export CXX=clang++
+            export SPDLOG_LEVEL=trace
           '';
         };
       });
