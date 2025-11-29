@@ -20,6 +20,7 @@ incs = include_directories('include')
 deps = [
   # Core deps
   dependency('sol2', default_options: ['use_luajit=true']),
+  dependency('spdlog')
 ]
 
 # --------- Source Discovery ---------
