@@ -1,0 +1,10 @@
+# CUSTOM: Latest source of rll as of this commit
+[wrap-file]
+directory = RLL-829e9f27fca8d724a45fc0ccd8ad5e56d86d99b2
+source_url = https://github.com/elijahfhopp/RLL/archive/829e9f27fca8d724a45fc0ccd8ad5e56d86d99b2.tar.gz
+source_filename = RLL-829e9f27fca8d724a45fc0ccd8ad5e56d86d99b2.tar.gz
+source_hash = 05a6f514167a12c230437da55572375ed6e3d8395c6e360edc0d86c42d40b7c9
+patch_directory = rll 
+
+[provide]
+dependency_names = rll 

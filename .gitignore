@@ -33,6 +33,8 @@
 
 build/
 subprojects/**/
+!subprojects/packagefiles
+!subprojects/packagefiles/**
 .vscode/
 .idea/
 *.gz
