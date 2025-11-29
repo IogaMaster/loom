@@ -1,9 +1,13 @@
+alias r:=run
 alias b:=build
 alias t:=test
 alias d:=docs
 alias c:=clean
 
-default: build
+default: run
+
+run: build
+    cd ./build && ./loom
 
 # Build the project
 build: 

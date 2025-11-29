@@ -4,7 +4,7 @@ project(
   license: 'MIT',
   license_files: 'LICENSE',
   default_options: [
-    'default_library=static',
+    'default_library=shared',
     'warning_level=3',
     'c_std=c17',
     'cpp_std=c++20',
@@ -56,9 +56,12 @@ endforeach
 
 foreach module_name : module_names
   module_srcs = []
+  module_path = 'src/modules/' + module_name
+
   foreach src : clean_srcs
-    if src.startswith(module_name)
+    if src.startswith(module_path)
       module_srcs += src
+      message('Adding source: ' + src)
     endif
   endforeach
 
