@@ -75,6 +75,23 @@ foreach module_name : module_names
   )
 endforeach
 
+# --------- Bundle Lua types for lsp ---------
+
+lua_defs = run_command(
+  ['fd', '.', src_dir, '--extension', 'lua', '--extension', '.d.lua'],
+  check: true,
+).stdout().strip().split('\n')
+
+lua_defs_out = 'build/.lua_api/'
+
+foreach lua_def : lua_defs
+  filename = lua_def.split('/')[-1]
+  run_command(
+    ['install', '-D', lua_def, lua_defs_out + filename],
+    check: true,
+  )
+endforeach
+
 # --------- Runtime ---------
 
 executable(

@@ -1,0 +1,8 @@
+{
+    "diagnostics.globals": [
+        "loom"
+    ],
+    "workspace.library": [
+        "./build/.lua_api"
+    ]
+}
