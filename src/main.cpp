@@ -31,6 +31,7 @@ auto main() -> int {
   auto state = init();
 
   state.lua.script(R"(
+    loom.debugger()
     loom.log.trace("trace")
     loom.log.debug("debug")
     loom.log.info("info")
