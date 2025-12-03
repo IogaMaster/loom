@@ -4,10 +4,10 @@ alias t:=test
 alias d:=docs
 alias c:=clean
 
-default: run
+default: build
 
-run: build
-    cd ./build && ./loom
+run target="testbed": build
+    cd ./examples/{{target}} && ../../build/loom
 
 # Build the project
 build: 

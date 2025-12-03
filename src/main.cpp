@@ -29,16 +29,6 @@ auto init() -> State {
 
 auto main() -> int {
   auto state = init();
-
-  state.lua.script(R"(
-    loom.debugger()
-    loom.log.trace("trace")
-    loom.log.debug("debug")
-    loom.log.info("info")
-    loom.log.warn("warn")
-    loom.log.error("Gaffor")
-    loom.log.critical("Critical")
-  )");
-
+  state.lua.script_file("main.lua");
   return 0;
 };
