@@ -2,9 +2,36 @@
 #include "spdlog/spdlog.h"
 #include <RLL/RLL.hpp>
 #include <filesystem>
-#include <iostream>
+#include <string>
+
+#if defined(_WIN32)
+#include <windows.h>
+#else
+#include <climits>
+#include <unistd.h>
+#endif
 
 namespace loom::utils {
+
+inline auto get_executable_dir() -> std::filesystem::path {
+#if defined(_WIN32)
+  std::array<wchar_t, MAX_PATH> buffer{};
+  DWORD len = GetModuleFileNameW(NULL, buffer.data(),
+                                 static_cast<DWORD>(buffer.size()));
+  if (len == 0 || len == buffer.size()) {
+    throw std::runtime_error("Failed to get executable path");
+  }
+  return std::filesystem::path(buffer.data()).parent_path();
+#else
+  constexpr size_t bufferSize = PATH_MAX;
+  std::array<char, bufferSize> buffer{};
+  ssize_t len = readlink("/proc/self/exe", buffer.data(), buffer.size());
+  if (len == -1) {
+    throw std::runtime_error("Failed to get executable path");
+  }
+  return std::filesystem::path(std::string(buffer.data(), len)).parent_path();
+#endif
+}
 
 // Global module list, otherwise they get unloaded and no longer can be called
 // from lua
@@ -14,7 +41,7 @@ static std::vector<std::unique_ptr<rll::shared_library>>
 inline void load_and_run_register(sol::state &lua, sol::environment &sandbox) {
   namespace fs = std::filesystem;
 
-  for (const auto &entry : fs::directory_iterator(fs::current_path())) {
+  for (const auto &entry : fs::directory_iterator(get_executable_dir())) {
     if (!entry.is_regular_file()) {
       continue;
     }
