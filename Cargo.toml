@@ -1,0 +1,27 @@
+cargo-features = ["edition2024"] # Make rust-analyzer shut up
+
+[package]
+name = "loom"
+version = "0.0.0"
+edition = "2024"
+license = "MIT"
+
+[dependencies]
+# Core
+mlua = { version = "0.11.5", features = ["luajit", "vendored"] }
+
+# Logging
+simplelog = "0.12.2"
+log = "0.4.29"
+
+[profile.dev]
+debug = true
+strip = false
+lto = true
+codegen-units = 1
+panic = "unwind"
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
