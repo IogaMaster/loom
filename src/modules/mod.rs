@@ -1,4 +1,6 @@
+mod loom_debugger;
 mod loom_log;
+
 use log::*;
 use mlua::prelude::*;
 
@@ -18,5 +20,16 @@ pub fn init_modules(lua: &Lua) {
         ),
     };
 
-    lua.globals().set("loom", loom);
+    match loom_debugger::init_loom_debugger(lua) {
+        Ok(exports) => {
+            info!("Module {} loaded", "loom_debugger");
+            let _ = loom.set("debugger", exports);
+        }
+        Err(error) => error!(
+            "Module {} failed to load. With error: {}",
+            "loom_debugger", error
+        ),
+    };
+
+    let _ = lua.globals().set("loom", loom);
 }
