@@ -10,9 +10,17 @@ use std::{fs::File, path::Path};
 fn main() -> LuaResult<()> {
     let lua = init();
     lua.load(Path::new("main.lua")).exec()?;
-
-    game_loop(&60.0, || {}, |dt| {});
-
+    game_loop(
+        &60.0,
+        || match lua.load("loom.tick()").exec() {
+            Ok(()) => (),
+            Err(_) => (),
+        },
+        |dt| match lua.load(format!("loom.frame({})", dt)).exec() {
+            Ok(()) => (),
+            Err(_) => (),
+        },
+    );
     Ok(())
 }
 
