@@ -2,11 +2,12 @@ mod modules;
 use crate::modules::*;
 use mlua::prelude::*;
 use simplelog::*;
-use std::fs::File;
+use std::{fs::File, path::Path};
 
-fn main() {
+fn main() -> LuaResult<()> {
     let lua = init();
-    lua.load("loom.log.info('tester')").exec();
+    lua.load(Path::new("main.lua")).exec()?;
+    Ok(())
 }
 
 fn init() -> Lua {
@@ -31,7 +32,8 @@ fn init() -> Lua {
         ),
     ])
     .unwrap();
-    let lua = Lua::new();
+
+    let lua = unsafe { Lua::unsafe_new() };
     init_modules(&lua);
 
     lua
