@@ -1,5 +1,8 @@
+mod core;
 mod modules;
-use crate::modules::*;
+use std::{io::Write, thread::sleep};
+
+use crate::{core::game_loop::game_loop, modules::*};
 use mlua::prelude::*;
 use simplelog::*;
 use std::{fs::File, path::Path};
@@ -7,6 +10,9 @@ use std::{fs::File, path::Path};
 fn main() -> LuaResult<()> {
     let lua = init();
     lua.load(Path::new("main.lua")).exec()?;
+
+    game_loop(&60.0, || {}, |dt| {});
+
     Ok(())
 }
 
