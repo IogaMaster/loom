@@ -22,6 +22,8 @@
 
         devShell = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [
+            just
+
             alejandra
             rust-analyzer
             (pkgs.fenix.stable.withComponents [
