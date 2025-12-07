@@ -4,9 +4,11 @@
     naersk.url = "github:nix-community/naersk";
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     fenix.url = "github:nix-community/fenix";
+
+    mdbook.url = "github:pbar1/nix-mdbook";
   };
 
-  outputs = { self, flake-utils, naersk, nixpkgs, fenix, }:
+  outputs = { self, flake-utils, naersk, nixpkgs, fenix, mdbook }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = (import nixpkgs) {
@@ -43,5 +45,13 @@
             export LD_LIBRARY_PATH=${pkgs.luajit}/lib:$LD_LIBRARY_PATH
           '';
         };
+
+        packages = {
+          book = mdbook.lib.buildMdBookProject {
+            inherit (pkgs) system;
+            src = ./docs;
+          };
+        };
+
       });
 }
