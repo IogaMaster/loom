@@ -3,6 +3,8 @@ mod modules;
 use std::{io::Write, thread::sleep};
 
 use crate::{core::game_loop::game_loop, modules::*};
+use glfw::{Action, Context, Key};
+use log::*;
 use mlua::prelude::*;
 use simplelog::*;
 use std::{fs::File, path::Path};
@@ -11,29 +13,50 @@ fn main() -> LuaResult<()> {
     let lua = init();
     lua.load(Path::new("main.lua")).exec()?;
 
-    match lua.load("loom.init()").exec() {
+    match lua.load("loom.init()").eval() {
         Ok(()) => (),
-        Err(_) => (),
+        Err(_) => debug!("No init function found, skipping..."),
     };
+
+    let mut glfw = glfw::init(glfw::fail_on_errors).unwrap();
+    let (mut window, events) = glfw
+        .create_window(1080, 720, "", glfw::WindowMode::Windowed)
+        .expect("Failed to create GLFW window.");
+
+    window.set_key_polling(true);
+    window.set_resizable(true);
+    window.make_current();
 
     game_loop(
         &60.0,
-        || match lua.load("loom.tick()").exec() {
-            Ok(()) => (),
-            Err(_) => (),
+        || {
+            let _ = lua.load("loom.tick()").exec();
         },
-        |dt| match lua.load(format!("loom.frame({})", dt)).exec() {
-            Ok(()) => (),
-            Err(_) => (),
+        |dt| {
+            let _ = lua.load(format!("loom.frame({})", dt)).exec();
+
+            glfw.poll_events();
+            for (_, event) in glfw::flush_messages(&events) {
+                handle_window_event(&mut window, event);
+            }
+            window.swap_buffers();
+            window.should_close()
         },
     );
 
     match lua.load("loom.shutdown()").exec() {
         Ok(()) => (),
-        Err(_) => (),
+        Err(_) => debug!("No shutdown function found, skipping..."),
     };
 
     Ok(())
+}
+
+fn handle_window_event(window: &mut glfw::Window, event: glfw::WindowEvent) {
+    match event {
+        glfw::WindowEvent::Key(Key::Escape, _, Action::Press, _) => window.set_should_close(true),
+        _ => {}
+    }
 }
 
 fn init() -> Lua {

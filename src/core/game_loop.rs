@@ -1,6 +1,10 @@
 use std::time::{Duration, Instant};
 
-pub fn game_loop<T: FnMut(), F: FnMut(f32)>(ticks_per_second: &f32, mut tick: T, mut frame: F) {
+pub fn game_loop<T: FnMut(), F: FnMut(f32) -> bool>(
+    ticks_per_second: &f32,
+    mut tick: T,
+    mut frame: F,
+) {
     let time_step = 1.0 / ticks_per_second;
     let mut delta_time = 0.0;
     let mut accumulator = 0.0;
@@ -16,6 +20,10 @@ pub fn game_loop<T: FnMut(), F: FnMut(f32)>(ticks_per_second: &f32, mut tick: T,
             tick();
             accumulator -= time_step;
         }
-        frame(delta_time)
+
+        let should_close = frame(delta_time);
+        if should_close {
+            break;
+        }
     }
 }

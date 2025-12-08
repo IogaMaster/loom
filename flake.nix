@@ -25,13 +25,13 @@
             just
 
             alejandra
-            rust-analyzer
             (pkgs.fenix.stable.withComponents [
               "cargo"
               "clippy"
               "rust-src"
               "rustc"
               "rustfmt"
+              "rust-analyzer"
             ])
             cargo-wizard
             cargo-audit
@@ -41,10 +41,16 @@
             mold
           ];
 
-          buildInputs = with pkgs; [ luajit ];
+          buildInputs = with pkgs; [
+            luajit
+            # glfw stuff
+            glfw
+            xorg.libX11
+            wayland
+          ];
 
           shellHook = ''
-            export LD_LIBRARY_PATH=${pkgs.luajit}/lib:$LD_LIBRARY_PATH
+            export LD_LIBRARY_PATH=${pkgs.luajit}/lib:${pkgs.glfw}/lib:$LD_LIBRARY_PATH
           '';
         };
 
