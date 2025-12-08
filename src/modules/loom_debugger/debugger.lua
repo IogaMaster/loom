@@ -788,5 +788,7 @@ elseif _VERSION < "Lua 5.1" or _VERSION > "Lua 5.4" then
 	dbg_writeln("Please send me feedback!")
 end
 
+loom = {}
 loom.debugger = dbg
+
 return dbg
