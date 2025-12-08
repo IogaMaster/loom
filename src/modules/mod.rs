@@ -1,4 +1,4 @@
-mod loom_debugger;
+mod loom_debug;
 mod loom_log;
 
 use log::*;
@@ -20,14 +20,14 @@ pub fn init_modules(lua: &Lua) {
         ),
     };
 
-    match loom_debugger::init_loom_debugger(lua) {
+    match loom_debug::init_loom_debug(lua) {
         Ok(exports) => {
-            info!("Module {} loaded", "loom_debugger");
-            let _ = loom.set("debugger", exports);
+            info!("Module {} loaded", "loom_debug");
+            let _ = loom.set("debug", exports);
         }
         Err(error) => error!(
             "Module {} failed to load. With error: {}",
-            "loom_debugger", error
+            "loom_debug", error
         ),
     };
 
