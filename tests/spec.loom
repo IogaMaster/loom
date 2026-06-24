@@ -1,0 +1,48 @@
+-- loki, modern systems programming language
+-- Comments are like this
+
+-- imports
+use fmt -- include lib my name
+use tests as customname -- override the name
+
+--------- 
+-- variables, constants
+--------
+hello = "world" -- type deduced as `str`
+a : u64 = 120_000 -- Explicit type, also numbers can split
+cn |= "tester" -- constant
+cntwo | bool = true -- Explicit type con
+b,c = "hello", "world" -- multiple assignment
+b | str, c : str = "hello", "world" -- typed multiple assignment
+_ = 120 -- throw away value
+
+--------- 
+-- functions 
+--------
+
+-- all functions are anonymous!
+fn {} -- look ma! No args! 
+
+-- they only get a name, when you assign them to a variable,
+add = fn {}
+
+-- if you intend not to use like c++ a lambda, and instead as a regular function, assign as a const
+main |= fn {
+    ret true
+} -> bool
+
+-- args are in parenthesis, and return types are after the block
+myfunc |= fn(a, b: i32) { -- declaration
+    ret a + b
+} -> i32
+
+-- to immediately invoke an anonymous function, add a bang, `!` and then the args
+-- The variable that is assigned will contain the return value
+three = fn(a, b) { -- the passed args with the bang will set the type of the lambda at compile time.
+    ret a + b
+} ! (1, 2)
+
+-- the tether runtime will be async capable. so if you add tilde, `~`, before the `fn` keyword, it will be async
+async_function |= ~fn {
+    ret http.request("GET") -- example async call
+}
