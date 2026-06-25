@@ -1,0 +1,39 @@
+-- Simple HTTP Server in Loom
+use fmt
+use http -- hypothetical standard network/http library
+
+main |= fn {
+    server = http.listen("127.0.0.1:8080")
+    fmt.println("Server running on port 8080...")
+
+    -- Loop over incoming connections (async runtime handles the scheduling)
+    for req : server.incoming {
+        
+        -- Handle each request asynchronously so we don't block the main loop
+        ~fn(r: http.Request) {
+            
+            -- Pattern match on the request path (expression-based)
+            response = match r.path {
+                "/" : http.Response.text(200, "Welcome to Loom!")
+                
+                "/api/data" : fn {
+                    -- Multi-step block expression returning a response
+                    log_request(r)
+                    http.Response.json(200, { "status": "ok", "version": 1.0 })
+                }!
+                
+                -- Catch-all 404
+                _ : http.Response.text(404, "Not Found")
+            }
+
+            -- Send the response back to the client
+            r.respond(response)
+
+        }!(req) -- Immediately invoke the async lambda per request
+    }
+}
+
+-- Helper function for logging
+log_request |= fn(r: http.Request) {
+    fmt.println("Received: ", r.method, " -> ", r.path)
+}

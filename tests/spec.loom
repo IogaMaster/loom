@@ -1,9 +1,9 @@
--- loki, modern systems programming language
+-- loom, modern systems programming language
 -- Comments are like this
 
 -- imports
 use fmt -- include lib my name
-use tests as customname -- override the name
+t |= use tests -- override the name
 
 --------- 
 -- variables, constants
@@ -27,14 +27,23 @@ fn {} -- look ma! No args!
 add = fn {}
 
 -- if you intend not to use like c++ a lambda, and instead as a regular function, assign as a const
-main |= fn {
+main |= fn -> bool {
     ret true
-} -> bool
+}
 
 -- args are in parenthesis, and return types are after the block
-myfunc |= fn(a, b: i32) { -- declaration
+myfunc |= fn(a, b: i32) -> i32 {
     ret a + b
-} -> i32
+}
+
+-- named return values 
+get_chars |= fn(string: str, char: str) -> positions: []i32 {
+  for c : string {
+    if c == char {
+      positions += c -- appending to list
+    }
+  }
+}
 
 -- to immediately invoke an anonymous function, add a bang, `!` and then the args
 -- The variable that is assigned will contain the return value
@@ -42,7 +51,142 @@ three = fn(a, b) { -- the passed args with the bang will set the type of the lam
     ret a + b
 } ! (1, 2)
 
--- the tether runtime will be async capable. so if you add tilde, `~`, before the `fn` keyword, it will be async
+-- the loom runtime will be async capable. so if you add tilde, `~`, before the `fn` keyword, it will be async
 async_function |= ~fn {
     ret http.request("GET") -- example async call
 }
+
+
+----------
+--- Compile time
+----------
+-- this is a HUGE subject, and much will change, however, the basic idea is like JAI.
+-- you can call ANYTHING at compile time using # operator
+
+fib |= fn(n: u32) -> u32 {
+    if n <= 1 { 
+        ret n 
+    }
+    ret fib(n - 1) + fib(n - 2)
+}
+
+myvar |= #fib(12) -- baked at compile time
+
+-- comptime lambdas
+other_expr |= fn(a, b) {
+  ret a - b 
+} !# (2,1) -- is `1` at compile time
+
+
+----------
+--- Pattern matching
+----------
+
+-- match is an expression
+-- returns selected arm result
+
+result = match name {
+    "teddy" : api.call(name)
+    _       : 12
+}
+
+-- blocks allowed for multi-step expressions
+-- last expr is return value
+
+result = match name {
+    "teddy" : {
+        fmt.println("teddy")
+        api.call(name)
+    }
+
+    _ : {
+        fmt.println("no match")
+        12
+    }
+}
+
+-- fn creates a deferred value, aka definable lambdas
+
+handler = match name {
+    "teddy" : fn {
+        api.call(name)
+    }
+
+    _ : fn {
+        fmt.println("no match")
+    }
+}
+
+-- explicit execution
+
+handler()
+
+-- shorthand invoke
+
+match name {
+    "teddy" : fn {
+        api.call(name)
+    }
+
+    _ : fn {
+        fmt.println("no match")
+    }
+}! -- invoke returned value as control flow
+
+-- fns to return value
+config_value = match flag {
+    'a'..'z' : fn {
+        -- 'v' needs custom verbose setup before returning
+        if flag == 'v' {
+            logger.set_level(level.debug)
+            ret "verbose_mode"
+        }
+        ret parse_standard_flag(flag)
+    }!
+
+    'A'..'Z' : fn {
+        -- Uppercase flags are critical overrides; log them immediately
+        fmt.println("override: ", flag)
+        ret parse_override_flag(flag)
+    }!
+
+    _ : "default_fallback"
+}
+
+-- rules
+-- match selects expressions only
+-- no special fn behavior in match
+-- expressions are eager unless fn
+-- fn is always lazy value
+
+-- ranges are inclusive
+-- used as match patterns like any other expression
+
+result = match c {
+    'a'..'z' : "lowercase"
+    'A'..'Z' : "uppercase"
+    '0'..'9' : "digit"
+    _        : "other"
+}
+
+-- multiple ranges per arm (OR semantics via commas)
+
+result = match c {
+    'a'..'z', 'A'..'Z' : "letter"
+    '0'..'9'           : "digit"
+    _                  : "other"
+}
+
+-- ranges work on ordered scalar types
+-- (ints, chars, etc.)
+
+result = match n {
+    0..9        : "small"
+    10..99      : "medium"
+    100..1000   : "large"
+    _           : "huge"
+}
+
+-- match with ranges is still expression-only
+-- no special execution rules apply
+-- arms return values, blocks, or fn values
