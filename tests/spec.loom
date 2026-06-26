@@ -8,13 +8,13 @@ t |= use tests -- override the name
 --------- 
 -- variables, constants
 --------
-hello = "world" -- type deduced as `str`
+hello := "world" -- type deduced as `str`
 a : u64 = 120_000 -- Explicit type, also numbers can split
 cn |= "tester" -- constant
 cntwo | bool = true -- Explicit type con
-b,c = "hello", "world" -- multiple assignment
+b,c := "hello", "world" -- multiple assignment
 b | str, c : str = "hello", "world" -- typed multiple assignment
-_ = 120 -- throw away value
+_ := 120 -- throw away value
 
 --------- 
 -- functions 
@@ -24,7 +24,7 @@ _ = 120 -- throw away value
 fn {} -- look ma! No args! 
 
 -- they only get a name, when you assign them to a variable,
-add = fn {}
+add |= fn {}
 
 -- if you intend not to use like c++ a lambda, and instead as a regular function, assign as a const
 main |= fn -> bool {
