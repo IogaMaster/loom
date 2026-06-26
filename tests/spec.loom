@@ -190,3 +190,25 @@ result = match n {
 -- match with ranges is still expression-only
 -- no special execution rules apply
 -- arms return values, blocks, or fn values
+
+--------
+-- MEMORY
+--------
+-- There are two ways (outside of the std lib) to deal with memory and other 
+a := 2
+b := 5
+result := 0
+
+add |= fn(a, b | &i32, c: &i32) -> i32 { 
+    -- a and b are constant references (which means this function only read the values referenced)
+    -- while c is a mutable reference, and can therefore be modifed
+    c = a+b
+} ! (&a,&b,&result) -- you must explicitly pass references
+
+
+--- Pointers are the other way,
+a := 12
+a_ptr: ^i32= ^a -- ^ both turns a type into a pointer, but also takes the address of the value
+
+b := a_ptr^ -- dereference the pointer to a, in this case to copy the value
+a_ptr^ = 5 -- a is now 5
