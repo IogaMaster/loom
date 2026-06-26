@@ -1,2 +1,1 @@
-fn main(a, b: i32) {
-} -> i32
+fn main(a, b: i32) -> i32 {}

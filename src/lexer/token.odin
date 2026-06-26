@@ -1,5 +1,5 @@
 #+feature dynamic-literals
-package tether_lexer
+package loom_lexer
 
 token :: struct {
 	lexeme:   string,
@@ -9,7 +9,7 @@ token :: struct {
 
 token_kind :: enum {
 	eof,
-	// kerwords
+	// keywords
 	fn,
 	identifier, // this is a crazy thing
 
@@ -21,10 +21,10 @@ token_kind :: enum {
 	comma,
 	colon,
 	semicolon,
+	arrow,
+	minus,
+	plus,
 	newline,
-
-	// literals
-	string_literal,
 }
 
 token_position :: struct {
@@ -43,6 +43,9 @@ symbols := map[string]token_kind {
 	","  = .comma,
 	":"  = .colon,
 	";"  = .semicolon,
+	"-"  = .minus,
+	"+"  = .plus,
+	"->" = .arrow,
 
 	// whitespace
 	"\n" = .newline,

@@ -1,81 +1,97 @@
-package tether_lexer
+package loom_lexer
 
+import "core:fmt"
 import "core:strings"
 
-lexer :: struct {
-	source_code:     string,
-	curr_byte:       int,
-	cursor_position: struct {
-		line, col: int,
+Lexer :: struct {
+	current_byte: int, // position in file
+	cursor:       struct {
+		line, col: int, // human readable for tokens to store
 	},
 }
 
+tokenize_file :: proc(lx: ^Lexer, source_code: string) -> []token {
+	result := [dynamic]token{} // List of tokens in the source_code
+	tok := "" // A buffer for building a token
 
-lexer_next_token :: proc(lx: ^lexer, peek := false) -> token {
-	result := token{}
-	tok := "" // build a token one char at a time
-
-	b := lx.curr_byte
-	loop: for char, i in strings.split(lx.source_code, "")[b:] {
-		i := b + i
-		if !peek {lx.curr_byte = i} 	// eat char if not peeking
-
-		// track line number and column for error in parsing
+	// Lex characters in the file
+	source_code := strings.split(source_code, "") // redefine as a split array
+	for char, i in source_code {
+		lx.current_byte += 1 // Move the counters forward
+		if char == "\n" {
+			lx.cursor.line += 0
+			lx.cursor.col = 0
+		} else {
+			lx.cursor.col += 1
+		}
 		if char in symbols {
-			// create a keyword token
-			if tok in keywords {
-				result = token {
-					lexeme = tok,
-					kind = keywords[tok],
-					position = token_position {
-						line = lx.cursor_position.line,
-						col = lx.cursor_position.col - len(tok),
-					},
-				}
-				tok = ""
-				break loop
-			}
+			if char == "" {continue}
+			if symbols[char] == nil {continue} 	// skip if char is not tokenizable
+		}
+		tok = strings.concatenate({tok, char}) // add the token to the builder
 
-			// create an identifier token
-			if len(tok) > 0 {
-				result = token {
-					lexeme = tok,
-					kind = .identifier,
-					position = token_position {
-						line = lx.cursor_position.line,
-						col = lx.cursor_position.col - len(tok),
-					},
-				}
-				tok = ""
-				break loop
-			}
 
-			// create a symbol token
-			result = token {
-				lexeme = char,
-				kind = symbols[char],
-				position = token_position {
-					line = lx.cursor_position.line,
-					col = lx.cursor_position.col,
-				},
-			}
-			tok = ""
-			if char == "\n" {
-				lx.cursor_position.line += 1
-				lx.cursor_position.col = 0
-			} else {
-				lx.cursor_position.col += 1
-			}
-			lx.curr_byte += 1 // force advance
-
-			if result.kind == nil {
-				continue // skip on non lexed symbols
-			}
-			break loop
+		next_char: string = ""
+		next_index := i + 1
+		if !(len(source_code) == next_index) {
+			next_char = source_code[next_index]
 		}
 
-		lx.cursor_position.col += 1
-		tok = strings.concatenate({tok, char})
+		candidate := strings.concatenate({tok, next_char})
+		if candidate in symbols {continue} 	// maximal munch
+
+		if tok in symbols {
+			append(
+				&result,
+				token {
+					lexeme = tok,
+					kind = symbols[tok],
+					position = token_position {
+						line = lx.cursor.line,
+						col = lx.cursor.col - len(tok),
+					},
+				},
+			)
+			tok = ""
+			continue
+		}
+
+		// break on next char is symbol
+		if next_char in symbols {
+			// keywords
+			if tok in keywords {
+				append(
+					&result,
+					token {
+						lexeme = tok,
+						kind = keywords[tok],
+						position = token_position {
+							line = lx.cursor.line,
+							col = lx.cursor.col - len(tok),
+						},
+					},
+				)
+				tok = ""
+				continue
+			}
+
+
+			// identifiers
+			append(
+				&result,
+				token {
+					lexeme = tok,
+					kind = token_kind.identifier,
+					position = token_position {
+						line = lx.cursor.line,
+						col = lx.cursor.col - len(tok),
+					},
+				},
+			)
+			tok = ""
+			continue
+		}
+
 	}
-	return result
+	return result[:]
 }
