@@ -14,6 +14,9 @@ tokenize_file :: proc(lx: ^Lexer, source_code: string) -> []token {
 	result := [dynamic]token{} // List of tokens in the source_code
 	tok := "" // A buffer for building a token
 
+	in_literal := false // used to skip chars for a literal
+	do_escape := false
+
 	// Lex characters in the file
 	source_code := strings.split(source_code, "") // redefine as a split array
 	for char, i in source_code {
@@ -25,17 +28,46 @@ tokenize_file :: proc(lx: ^Lexer, source_code: string) -> []token {
 			lx.cursor.col += 1
 		}
 		if char in symbols {
-			if char == "" {continue}
-			if symbols[char] == nil {continue} 	// skip if char is not tokenizable
+			if symbols[char] == nil && !in_literal {continue} 	// skip if char is not tokenizable, "UNLESS CAPTURING INTO A STRING LITERAL"
 		}
 		tok = strings.concatenate({tok, char}) // add the token to the builder
-
 
 		next_char: string = ""
 		next_index := i + 1
 		if !(len(source_code) == next_index) {
 			next_char = source_code[next_index]
 		}
+
+		/// =========
+		/// STRING LITERAL
+		/// =========
+		if char == "\\" {
+			do_escape = true
+			continue
+		}
+		if char == "\"" && !do_escape {
+			in_literal = !in_literal
+		} else if char == "\"" {
+			do_escape = false
+			continue
+		}
+		if in_literal {continue}
+		if !in_literal && char == "\"" {
+			append(
+				&result,
+				token {
+					lexeme = tok,
+					kind = .string_literal,
+					position = token_position {
+						line = lx.cursor.line,
+						col = lx.cursor.col - len(tok),
+					},
+				},
+			)
+			tok = ""
+			continue
+		}
+		/// =========
 
 		candidate := strings.concatenate({tok, next_char})
 		if candidate in symbols {continue} 	// maximal munch
