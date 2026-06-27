@@ -21,7 +21,8 @@ token_kind :: enum {
 	ret,
 	match,
 	if_kw, // Renamed to avoid Odin keyword conflict
-	for_kw, // Renamed to avoid Odin keyword conflict
+	for_kw, // Same thing
+
 	// Core Structural Operators
 	colon, // :  (Starts mutable variable declaration or match arm block)
 	pipe, // |  (Starts constant declaration or explicit type separator)
@@ -73,6 +74,7 @@ token_kind :: enum {
 	string_literal,
 	char_literal,
 	boolean_literal,
+	nil_literal,
 }
 
 keywords := map[string]token_kind {

@@ -5,4 +5,6 @@ fn main(a, b: i32) -> i32 {
     this := -1_231_231 -0.2
 
     that := true, false
+
+    more := nil
 }

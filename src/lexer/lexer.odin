@@ -166,6 +166,18 @@ tokenize_file :: proc(lx: ^Lexer, source_code: string) -> []token {
 						},
 					},
 				)
+			case "nil":
+				append(
+					&result,
+					token {
+						lexeme = tok,
+						kind = token_kind.nil_literal,
+						position = token_position {
+							line = lx.cursor.line,
+							col = lx.cursor.col - len(tok),
+						},
+					},
+				)
 			case:
 				append(
 					&result,
