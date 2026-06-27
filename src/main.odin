@@ -13,7 +13,9 @@ main :: proc() {
 	}
 	defer delete(data, context.allocator)
 
-	lx := lexer.Lexer{}
+	lx := lexer.Lexer {
+		cursor = {line = 1, col = 1},
+	}
 
 	tokens := lexer.tokenize_file(&lx, string(data))
 

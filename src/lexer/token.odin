@@ -24,10 +24,11 @@ token_kind :: enum {
 	arrow,
 	minus,
 	plus,
+	dot,
 	newline,
 
 	// literals
-	integer_literal,
+	number_literal,
 	float_literal,
 	string_literal,
 	char_literal,
@@ -51,6 +52,7 @@ symbols := map[string]token_kind {
 	";"  = .semicolon,
 	"-"  = .minus,
 	"+"  = .plus,
+	"."  = .dot,
 	"->" = .arrow,
 
 	// whitespace

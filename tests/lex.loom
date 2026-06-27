@@ -1,3 +1,6 @@
 fn main(a, b: i32) -> i32 {
-    c := "Hel\"lo, World!"
+    c := "Hello, World!"
+    this.that()
+
+    this := -1_231_231 -0.2
 }

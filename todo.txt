@@ -1,4 +1,5 @@
 x 2026-06-26 2026-06-26 @lexer string literals
-2026-06-26 @lexer number literals
+x 2026-06-26 2026-06-26 @lexer number literals
 2026-06-26 @lexer char literals
-2026-06-26 @lexer escape chars
+x 2026-06-26 2026-06-26 @lexer escape chars
+2026-06-26 @lexer boolean literals
