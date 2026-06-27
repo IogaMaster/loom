@@ -1,13 +1,14 @@
-package tether
+package loom
 
 import "core:fmt"
 import "core:os"
 import "core:strings"
 
 import "lexer"
+import "parser"
 
 main :: proc() {
-	data, err := os.read_entire_file("tests/lex.loom", context.allocator)
+	data, err := os.read_entire_file("tests/parse.loom", context.allocator)
 	if err != nil {
 		return
 	}
