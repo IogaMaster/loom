@@ -1,6 +1,5 @@
 package loom_lexer
 
-import "core:fmt"
 import "core:strings"
 
 Lexer :: struct {
@@ -59,7 +58,6 @@ tokenize_file :: proc(lx: ^Lexer, source_code: string) -> []token {
 		/// =========
 		switch rune(char[0]) {
 		case '0' ..= '9':
-			fmt.println(tok)
 			if len(tok) < 2 {in_number_literal = true}
 			if in_number_literal {
 				if next_char == "_" {continue} 	// underscores too
