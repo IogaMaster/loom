@@ -32,6 +32,7 @@ token_kind :: enum {
 	float_literal,
 	string_literal,
 	char_literal,
+	boolean_literal,
 }
 
 token_position :: struct {

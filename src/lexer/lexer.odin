@@ -153,17 +153,32 @@ tokenize_file :: proc(lx: ^Lexer, source_code: string) -> []token {
 			// Parse a number literal
 
 			// if NOTHING else can be parsed, identifiers are made
-			append(
-				&result,
-				token {
-					lexeme = tok,
-					kind = token_kind.identifier,
-					position = token_position {
-						line = lx.cursor.line,
-						col = lx.cursor.col - len(tok),
+			switch tok {
+			case "true", "false":
+				append(
+					&result,
+					token {
+						lexeme = tok,
+						kind = token_kind.boolean_literal,
+						position = token_position {
+							line = lx.cursor.line,
+							col = lx.cursor.col - len(tok),
+						},
 					},
-				},
-			)
+				)
+			case:
+				append(
+					&result,
+					token {
+						lexeme = tok,
+						kind = token_kind.identifier,
+						position = token_position {
+							line = lx.cursor.line,
+							col = lx.cursor.col - len(tok),
+						},
+					},
+				)
+			}
 			tok = ""
 			continue
 		}
