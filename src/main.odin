@@ -20,7 +20,5 @@ main :: proc() {
 
 	tokens := lexer.tokenize_file(&lx, string(data))
 
-	for tok in tokens {
-		fmt.println(tok)
-	}
+	parser.parse_tokens(tokens)
 }
